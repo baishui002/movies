@@ -16,17 +16,27 @@ export default function request (url='', data={}, method='GET') {
 			},
 			success: (result) => {
 				resolve(result.data);
-				uni.hideLoading();
-			
 			},
 			fail: (error) => {
-				reject(error);
-				uni.hideLoading();
+				reject(error.data);
+				let code = error.data.code;
+				console.log('code', code);
+				switch (code){
+					case 1000:
+						console.log(1000)
+						break;
+					default:
+					console.log(100033)
+						break;
+				}
 				uni.showToast({
 					title: '请求失败，稍后再试',
 					duration: 2000,
 					icon: 'none'
 				});
+			},
+			complete: () => {
+				uni.hideLoading();
 			}
 		}) 
 	})

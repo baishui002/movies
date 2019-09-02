@@ -10,12 +10,14 @@
 		 indicator-color="red"
 		 indicator-active-color="#fff">
 			<swiper-item class="swiper-item" v-for="(item, index) in imgList" :key="index">
-				<image :src="item.src" mode=""></image>
+				<navigator class="img-box" :url="'/pages/detail/detail?id='+item.id"  hover-class="navigator-hover">
+					<image class="img" :src="item.src" mode=""></image>
+				</navigator>
 			</swiper-item>
 		</swiper>
 		
 		<!-- 正在上映 -->
-		<card title="正在上映的电影" :movies="playing"></card>
+		<card title="正在上映的电影" :movies="playing" showCity=true></card>
 		
 		<!-- 即将上映 -->
 		<card title="即将上映的电影" :movies="coming"></card>
@@ -29,8 +31,10 @@
 </template>
 
 <script>
+	import amap from '@/common/amap-wx.js'
 	import { reqWeekly, reqNowPlaying, reqComing, reqNew, reqTop} from '@/api/index.js'
 	import card  from '@/components/card.vue'
+	import { mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -39,16 +43,44 @@
 				coming: [],
 				newRank: [],
 				top250: [],
+				amapPlugin: null,  
+				key: '2c0978d2cc5408ffeb47e0d466503351',	// 高德地图key
+				weather: {  
+					hasData: false,  
+					data: []  
+				}
 			}
 		},
 		onLoad() {
+			this.amapPlugin = new amap.AMapWX({
+			     key: this.key  
+			});
+			this.getLocation()
+			
 			this.getWeedkly()
 			this.getPlaying()
 			this.getComing()
 			this.getnewRank()
 			this.getTop250()
+			
+			
 		},
 		methods: {
+			...mapMutations(['setCity']),
+			// 获取位置
+			getLocation() {  
+				// uni.showLoading({  
+				// 	title: '获取信息中'  
+				// });  
+				this.amapPlugin.getRegeo({  
+					success: (data) => {  
+						// console.log(data)  
+						let city = data[0].name
+						this.setCity(city.substr(0, 2))
+						uni.setStorageSync('city', city)
+					}  
+				});  
+			},
 			// 轮播图
 			async getWeedkly() {
 				const res = await reqWeekly()
@@ -60,12 +92,12 @@
 			// 正在热映
 			async getPlaying() {
 				const res = await reqNowPlaying()
-				res.entries.splice(0, 10).forEach((item) => {
+				res.subjects.forEach((item) => {
 					this.playing.push({
 						id:item.id,
 						src: item.images.small,
 						title: item.title,
-						rate: item.rating,
+						rate: item.rating.average,
 					})
 				})
 			},
@@ -96,7 +128,7 @@
 				})
 			},
 			
-			// 即将热映
+			// Top250
 			async getTop250() {
 				const res = await reqTop()
 				res.subjects.splice(0, 10).forEach((item) => {
@@ -127,12 +159,16 @@
 		background-color: #F8F8F8;
 		border-bottom: 1upx solid #999999;
 		.swiper-item {
-			width: 100%;
-			height: 270upx;
+			// width: 100%;
+			// height: 270upx;
 		}
-			image {
-				width: 100%;
-				height: 100%;
-			}
+		.img-box {
+			width: 100%;
+			height: 100%
+		}
+		.img {
+			width: 100%;
+			height: 100%;
+		}
 	}
 </style>

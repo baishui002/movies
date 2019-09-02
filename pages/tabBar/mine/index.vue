@@ -1,22 +1,46 @@
 <template>
 	<view class="content">
-		mine
+		<button
+		class='testbutton'
+		open-type="getUserInfo"
+		@getuserinfo="getuserinfo"
+		withCredentials="true"
+		>
+		获取微信用户信息
+		</button>
 	</view>
 </template>
 
 <script>
-	import { reqNowPlaying } from '../../../api/index.js'
+	import { reqNowPlaying } from '@/api/index.js'
+	import { mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
-				title: 'Hello...'
+				
 			}
 		},
 		onLoad() {
-			
+			this.getUser()
 		},
 		methods: {
-		
+			...mapMutations(['setUserInfo']),
+			getuserinfo (e) {
+				console.log(e)
+				
+			},
+			getUser () {
+				console.log(3333)
+				// uni.login({
+				//   provider: 'weixin',
+				//   success: function (loginRes) {
+				//     console.log(loginRes);
+				//   },
+				//   fail: (err) => {
+				// 	  console.log('err:', err)
+				//   }
+				// });
+			}
 		}
 	}
 </script>
