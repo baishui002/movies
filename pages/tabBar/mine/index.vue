@@ -1,74 +1,66 @@
 <template>
-	<view class="content">
-		<button
-		class='testbutton'
-		open-type="getUserInfo"
-		@getuserinfo="getuserinfo"
-		withCredentials="true"
-		>
-		获取微信用户信息
-		</button>
+	<view class="mine">
+		<view class="avatar-box">
+			<image class="avatar" :src="userInfo.avatarUrl" mode=""></image>
+			<view class="name">
+				<text class="hi">Hi, {{userInfo.nickName}}</text>
+				<text>欢迎使用白水-movies</text>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
-	import { reqNowPlaying } from '@/api/index.js'
-	import { mapMutations } from 'vuex'
+	import { mapState } from 'vuex'
+	
 	export default {
 		data() {
 			return {
-				
+				userInfo: uni.getStorageSync('userInfo') || {}
 			}
+		},
+		computed: {
+			// ...mapState(['userInfo'])
 		},
 		onLoad() {
-			this.getUser()
+			console.log(11,this.userInfo)
 		},
 		methods: {
-			...mapMutations(['setUserInfo']),
-			getuserinfo (e) {
-				console.log(e)
-				
-			},
-			getUser () {
-				console.log(3333)
-				// uni.login({
-				//   provider: 'weixin',
-				//   success: function (loginRes) {
-				//     console.log(loginRes);
-				//   },
-				//   fail: (err) => {
-				// 	  console.log('err:', err)
-				//   }
-				// });
-			}
+		},
+		components:{
 		}
 	}
 </script>
 
-<style>
-	.content {
+<style scoped lang="scss">
+	.mine {}
+	.avatar-box {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+		flex-direction: space-between;
+		padding: 20upx;
+		.avatar {
+			width: 100upx;
+			height: 100upx;
+			border-radius: 50%;
+		}
+
+		.name {
+			flex: 1;
+			display: flex;
+			flex-direction: space-between;
+			flex-direction: column;
+			margin-left: 40upx;
+			height: 100upx;
+			
+			text {
+				font-size: 26upx;
+			}
+			
+			.hi {
+				font-size: 40upx;
+				// line-height: 40upx;
+			}
+		}
 	}
 
-	.logo {
-		height: 200upx;
-		width: 200upx;
-		margin-top: 200upx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 50upx;
-	}
-
-	.text-area {
-		display: flex;
-		justify-content: center;
-	}
-
-	.title {
-		font-size: 36upx;
-		color: #8f8f94;
-	}
 </style>

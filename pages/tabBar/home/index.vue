@@ -52,21 +52,34 @@
 			}
 		},
 		onLoad() {
-			this.amapPlugin = new amap.AMapWX({
-			     key: this.key  
-			});
-			this.getLocation()
-			
-			this.getWeedkly()
-			this.getPlaying()
-			this.getComing()
-			this.getnewRank()
-			this.getTop250()
-			
+			this.isLogin()
+			console.log(123)
 			
 		},
 		methods: {
 			...mapMutations(['setCity']),
+			
+			// 登录判断
+			isLogin () {
+				const isLogin = uni.getStorageSync('isLogin')
+				 if (!isLogin) {
+					console.log(2, isLogin);
+					uni.reLaunch({
+						url: '/pages/userCenter/login'
+					})
+				 } else {
+					 this.amapPlugin = new amap.AMapWX({
+					      key: this.key  
+					 });
+					 this.getLocation()
+					 
+					 this.getWeedkly()
+					 this.getPlaying()
+					 this.getComing()
+					 this.getnewRank()
+					 this.getTop250()
+				 }
+			},
 			// 获取位置
 			getLocation() {  
 				// uni.showLoading({  

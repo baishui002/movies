@@ -5,10 +5,14 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	state: {
+		isLogin: false,
 		city: '',
 		userInfo: {}
 	},
     mutations: {
+		setLogin (state, isLogin) {
+			state.isLogin = isLogin
+		},
 		setCity (state, city) {
 			state.city = city
 		},
