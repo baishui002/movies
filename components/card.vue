@@ -26,7 +26,7 @@
 	export default {
 		data() {
 			return {
-				// showCity: 
+				city: uni.getStorageSync('city')
 			}
 		},
 		props:{
@@ -35,8 +35,8 @@
 				default: ''
 			},
 			showCity: {
-				type: Boolean,
-				default: false
+				type: String,
+				default: ''
 			},
 			movies: {
 				type: Array,
@@ -47,12 +47,16 @@
 				default: true
 			}
 		},
-		computed:{
-			...mapState(['city'])
-		},
-		 components: {
+		computed:{},
+		components: {
 			uniIcon
-		 }
+		},
+		onLoad () {
+			console.log(33, this.city)
+		// 	setTimeout(() => {
+		// 		console.log('time:', this.city)
+		// 	}, 1000)
+		}
 	}
 </script>
 

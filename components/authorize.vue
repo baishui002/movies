@@ -1,6 +1,6 @@
 <template>
 	<view class="authorize">
-		<view v-if="isCanUse">
+		<view v-if="!hasLogin">
 			<view>
 				<view class='header'>
 					<image src='../static/images/wx_login.png'></image>
@@ -19,21 +19,22 @@
 </template>
 
 <script>
-	import { mapMutations } from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
-				isCanUse: uni.getStorageSync('isCanUse')||true//默认为true
+				// isCanUse: uni.getStorageSync('isCanUse')||true//默认为true
 			}
 		},
+		computed: {
+			...mapState(['hasLogin'])
+		},
 		methods: {
-			...mapMutations(['setLogin', 'setUserInfo']),
+			...mapMutations(['setUserInfo']),
 			wxGetUserInfo(user) {
-				console.log(1, user);
-				this.setLogin(true)
-				uni.setStorageSync('isLogin', true)
-				uni.setStorageSync('userInfo', user.target.userInfo)
-				this.setUserInfo(user.target.userInfo)
+				let { nickName, avatarUrl} = user.target.userInfo
+				uni.setStorageSync('userInfo', {nickName, avatarUrl, hasLogin: true})
+				this.setUserInfo({nickName, avatarUrl})
 				
 				uni.switchTab({
 					url: '/pages/tabBar/home/index'

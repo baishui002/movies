@@ -3,8 +3,12 @@
 		<view class="avatar-box">
 			<image class="avatar" :src="userInfo.avatarUrl" mode=""></image>
 			<view class="name">
-				<text class="hi">Hi, {{userInfo.nickName}}</text>
-				<text>欢迎使用白水-movies</text>
+				<view class="hi">
+					<text>Hi, {{userInfo.nickName}}</text>
+				</view>
+				<view>
+					<text>欢迎使用白水-movies</text>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -57,7 +61,9 @@
 			}
 			
 			.hi {
-				font-size: 40upx;
+				text {
+					font-size: 40upx;
+				}
 				// line-height: 40upx;
 			}
 		}

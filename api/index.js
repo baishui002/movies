@@ -1,5 +1,5 @@
 import request from './request'
-const city = uni.getStorageInfoSync('city') || ''
+// const city = uni.getStorageInfoSync('city') || ''
 
 // 本周口碑榜--轮播图
 export const reqWeekly = (params) => request('/weekly', params) 

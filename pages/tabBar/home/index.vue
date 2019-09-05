@@ -34,7 +34,7 @@
 	import amap from '@/common/amap-wx.js'
 	import { reqWeekly, reqNowPlaying, reqComing, reqNew, reqTop} from '@/api/index.js'
 	import card  from '@/components/card.vue'
-	import { mapMutations } from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -51,9 +51,11 @@
 				}
 			}
 		},
+		computed: {
+			...mapState(['hasLogin'])
+		},
 		onLoad() {
 			this.isLogin()
-			console.log(123)
 			
 		},
 		methods: {
@@ -61,39 +63,39 @@
 			
 			// 登录判断
 			isLogin () {
-				const isLogin = uni.getStorageSync('isLogin')
-				 if (!isLogin) {
-					console.log(2, isLogin);
+				 if (!this.hasLogin) {
 					uni.reLaunch({
-						url: '/pages/userCenter/login'
+						url: '/pages/userCenter/login/login'
 					})
 				 } else {
-					 this.amapPlugin = new amap.AMapWX({
-					      key: this.key  
-					 });
-					 this.getLocation()
-					 
-					 this.getWeedkly()
-					 this.getPlaying()
-					 this.getComing()
-					 this.getnewRank()
-					 this.getTop250()
+					this.amapPlugin = new amap.AMapWX({
+						key: this.key  
+					});
+					this.getLocation()
+					this.getAllData()
 				 }
 			},
+			
 			// 获取位置
-			getLocation() {  
-				// uni.showLoading({  
-				// 	title: '获取信息中'  
-				// });  
+			getLocation() {
 				this.amapPlugin.getRegeo({  
-					success: (data) => {  
-						// console.log(data)  
-						let city = data[0].name
-						this.setCity(city.substr(0, 2))
+					success: (data) => {   
+						let city = data[0].name.substr(0, 2)
+						this.setCity(city)
 						uni.setStorageSync('city', city)
 					}  
 				});  
 			},
+			
+			// 初始化所有数据
+			getAllData () {
+				this.getWeedkly()
+				this.getPlaying()
+				this.getComing()
+				this.getnewRank()
+				this.getTop250()
+			},
+			
 			// 轮播图
 			async getWeedkly() {
 				const res = await reqWeekly()
